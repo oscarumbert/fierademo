@@ -17,7 +17,7 @@ import lombok.Getter;
 public class ValidatorImpl implements Validator<Tracker,String>{
 	private boolean result;
 	private ErrorsMessage message;
-	
+
 	@Override
 	public boolean validCreate(String url) {
 		this.result = true;

@@ -56,12 +56,13 @@ public class TrackerController {
 	@GetMapping(value="redirectedQuantity/{url}")
 	public ResponseEntity<?> redirectedQuantity(@PathVariable String url) throws TrackerException{
 		Tracker tracker = trackerService.get(url,false);
-		return ResponseEntity.status(HttpStatus.OK).body(tracker);
+		return ResponseEntity.status(HttpStatus.OK).body(tracker.getRedirectedQuantity());
 
 	}
 	@PutMapping(value ="{url}")
-	public ResponseEntity<?> invalid(@PathVariable String url){
-		return ResponseEntity.status(HttpStatus.CREATED).body(null);
+	public ResponseEntity<?> invalid(@PathVariable String url) throws TrackerException{
+		trackerService.update(url);
+		return ResponseEntity.status(HttpStatus.OK).body("Se invalido la url exitosamente");
 
 	}
 }

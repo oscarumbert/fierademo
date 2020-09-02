@@ -1,7 +1,11 @@
 package com.fiera.demo.enumerator;
 
 import org.springframework.http.HttpStatus;
-
+/**
+ * Este enum se encarga de manejar los errores de la aplicacion
+ * @author oscar
+ *
+ */
 public enum ErrorsMessage {
 
 	URL_INVALID("La url no es valida",HttpStatus.NOT_FOUND),

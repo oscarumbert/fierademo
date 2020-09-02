@@ -81,6 +81,22 @@ public class TrackerControllerTest {
 	    }).withMessageMatching(ErrorsMessage.URL_NULL.getDescription());	
 
 	}
+	@Test
+	public void updateOkTest() throws TrackerException, URISyntaxException {
+		assertThat(trackController.invalid("https://www.fiera.com.ar").getBody()).isEqualTo("Se invalido la url exitosamente");
+
+	}
+	@Test
+	public void updateExceptionTest() throws TrackerException {
+		trackService = getServiceMockException();
+		trackController = new TrackerController(trackService,converter);
+
+		assertThatExceptionOfType(TrackerException.class)
+		  .isThrownBy(() -> {
+			  trackController.invalid("https://www.fiera.com.ar");
+	    }).withMessageMatching(ErrorsMessage.URL_NULL.getDescription());		
+
+	}
 	
 	private TrackerServiceImpl createServiceMock(String url) throws TrackerException {
 		TrackerServiceImpl trackerService = (TrackerServiceImpl) Mockito.mock(TrackerServiceImpl.class);

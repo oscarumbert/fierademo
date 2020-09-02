@@ -4,7 +4,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import com.fiera.demo.model.Tracker;
-
+/**
+ * Esta entidad se encargar de parsear datos de una entidad a otra
+ * @author oscar
+ *
+ */
 @Component
 public class Converter {
 

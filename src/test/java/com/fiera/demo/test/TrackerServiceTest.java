@@ -118,6 +118,22 @@ public class TrackerServiceTest {
 		String url ="https://www.fiera.com.ar";
 		assertThat(trackerService.update("https://www.fiera.com.ar")).isTrue();
 	}
+
+	@Test
+	public void getErrorUpdate() throws TrackerException {
+		String url ="https://www.fiera.com.ar";
+		//mock
+		TrackerRepository trackerRepository = createTrackerRepositoryMock(null);
+		ValidatorImpl validate = createValidateMock(true,null);
+		TrackerBuilder trackerBuilder = createTrackerBuilderMock(createTracker("","https://www.fiera.com.ar"));
+		trackerService = new TrackerServiceImpl(trackerRepository,validate,trackerBuilder);
+		
+		assertThatExceptionOfType(TrackerException.class)
+		  .isThrownBy(() -> {
+			  trackerService.update("https://www.fiera.com.ar");
+		}).withMessageMatching(ErrorsMessage.URL_NOT_EXIST.getDescription());	
+		
+	}
 	
 	private Tracker createTracker(String url,String target) {
 		Tracker tracker = new Tracker();

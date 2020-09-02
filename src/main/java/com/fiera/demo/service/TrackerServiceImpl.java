@@ -3,6 +3,7 @@ package com.fiera.demo.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fiera.demo.model.Tracker;
 import com.fiera.demo.builder.TrackerBuilder;
@@ -11,6 +12,7 @@ import com.fiera.demo.exception.TrackerException;
 import com.fiera.demo.repository.TrackerRepository;
 import com.fiera.demo.validate.ValidatorImpl;
 
+@Service
 public class TrackerServiceImpl implements ServiceGeneric<Tracker,String>{
 
 	@Autowired
@@ -69,9 +71,19 @@ public class TrackerServiceImpl implements ServiceGeneric<Tracker,String>{
 	}
 
 	@Override
-	public boolean update(String entity) throws TrackerException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean update(String id) throws TrackerException {
+		boolean result = true;
+		Optional<Tracker> optional = trackerRepository.findById(id);
+		
+		if(!optional.isPresent()) {
+			throw new TrackerException(ErrorsMessage.URL_NOT_EXIST);
+
+		}else {
+			Tracker tracker = optional.get();
+			tracker.setValid(false);
+			trackerRepository.save(tracker);
+		}
+		return result;
 	}
 
 }

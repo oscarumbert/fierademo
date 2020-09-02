@@ -3,6 +3,7 @@ package com.fiera.demo.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 
 
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
 public class Tracker {
 
 	@Id

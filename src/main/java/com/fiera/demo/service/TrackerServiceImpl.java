@@ -1,5 +1,7 @@
 package com.fiera.demo.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fiera.demo.model.Tracker;
@@ -47,9 +49,23 @@ public class TrackerServiceImpl implements ServiceGeneric<Tracker,String>{
 	}
 
 	@Override
-	public Tracker get(String entity, boolean withValidations) throws TrackerException {
-		// TODO Auto-generated method stub
-		return null;
+	public Tracker get(String id, boolean withValidations) throws TrackerException {
+		Optional<Tracker> optional = trackerRepository.findById(id);
+		
+		if(optional.isPresent()) {
+			if( withValidations && !validate.validEntity(optional.get())) {
+				throw new TrackerException(validate.getMessage());
+
+			}else {
+				Tracker tracker = optional.get();
+				tracker.setRedirectedQuantity(tracker.getRedirectedQuantity()+1);
+				//TODO se deberia validar que guardo bien
+				trackerRepository.save(tracker);
+				return tracker;
+			}
+		}else {
+			throw new TrackerException(ErrorsMessage.URL_NOT_EXIST);
+		}
 	}
 
 	@Override

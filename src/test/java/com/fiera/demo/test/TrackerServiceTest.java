@@ -67,6 +67,57 @@ public class TrackerServiceTest {
 			  trackerService.create(url);
 		}).withMessageMatching(ErrorsMessage.URL_INVALID.getDescription());	
 	}
+	@Test
+	public void getOkWithValidTest() throws TrackerException {
+		String url ="https://www.fiera.com.ar";
+		assertThat(trackerService.get("", true)).extracting("target").isEqualTo("https://www.fiera.com.ar");
+	}
+
+	@Test
+	public void getOkWithoutValidTest() throws TrackerException {
+		String url = "https://www.prueba.com";
+		// mock
+		TrackerRepository trackerRepository = createTrackerRepositoryMock(createTracker("https://www.prueba.com","https://www.fiera.com.ar"));
+		ValidatorImpl validate = createValidateMock(false, ErrorsMessage.URL_INVALID);
+		TrackerBuilder trackerBuilder = createTrackerBuilderMock(createTracker("","https://www.fiera.com.ar"));
+		trackerService = new TrackerServiceImpl(trackerRepository, validate, trackerBuilder);
+		Tracker tracker = trackerService.get("", false);
+		assertThat(tracker).extracting("target").isEqualTo("https://www.fiera.com.ar");
+	}
+	@Test
+	public void getInvalidTest() throws TrackerException {
+		String url ="https://www.fiera.com.ar";
+		//mock
+		TrackerRepository trackerRepository = createTrackerRepositoryMock(createTracker("https://www.prueba.com","https://www.fiera.com.ar"));
+		ValidatorImpl validate = createValidateMock(false,ErrorsMessage.URL_INVALID);
+		TrackerBuilder trackerBuilder = createTrackerBuilderMock(createTracker("","https://www.fiera.com.ar"));
+		trackerService = new TrackerServiceImpl(trackerRepository,validate,trackerBuilder);
+		
+		assertThatExceptionOfType(TrackerException.class)
+		  .isThrownBy(() -> {
+			  trackerService.get(url,true);
+		}).withMessageMatching(ErrorsMessage.URL_INVALID.getDescription());	}
+	
+	@Test
+	public void getErrorTest() throws TrackerException {
+		String url ="https://www.fiera.com.ar";
+		//mock
+		TrackerRepository trackerRepository = createTrackerRepositoryMock(null);
+		ValidatorImpl validate = createValidateMock(true,null);
+		TrackerBuilder trackerBuilder = createTrackerBuilderMock(createTracker("","https://www.fiera.com.ar"));
+		trackerService = new TrackerServiceImpl(trackerRepository,validate,trackerBuilder);
+		
+		assertThatExceptionOfType(TrackerException.class)
+		  .isThrownBy(() -> {
+			  trackerService.get("", true);
+		}).withMessageMatching(ErrorsMessage.URL_NOT_EXIST.getDescription());	
+		
+	}	
+	@Test
+	public void getOkUpdate() throws TrackerException {
+		String url ="https://www.fiera.com.ar";
+		assertThat(trackerService.update("https://www.fiera.com.ar")).isTrue();
+	}
 	
 	private Tracker createTracker(String url,String target) {
 		Tracker tracker = new Tracker();

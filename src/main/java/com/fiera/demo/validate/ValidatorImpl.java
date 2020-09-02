@@ -3,6 +3,7 @@ package com.fiera.demo.validate;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
 
@@ -33,11 +34,21 @@ public class ValidatorImpl implements Validator<Tracker,String>{
 	}
 
 	@Override
-	public boolean validEntity(Tracker entity) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean validEntity(Tracker tracker) {
+		this.result = true;
+		
+		if(!isValidUrl(tracker.getTarget())) {
+			this.result = false;
+			message = ErrorsMessage.URL_INVALID;
+		}else if(!tracker.isValid()){
+			this.result = false;
+			message = ErrorsMessage.URL_INVALIDATED;
+		}else if(!isExpired(tracker.getExpirationDate())) {
+			this.result = false;
+		}
+		return this.result;
 	}
-
+	
 	private boolean isValidUrl(String url) {
 		boolean result = true;
 		try {
@@ -49,6 +60,16 @@ public class ValidatorImpl implements Validator<Tracker,String>{
 		
 		return result;
 	}
-
+	private boolean isExpired(LocalDateTime date) {
+		boolean result = true;
+		LocalDateTime actually = LocalDateTime.now();
+		
+		if(date.isBefore(LocalDateTime.now())) {
+			message = ErrorsMessage.URL_EXPIRED;
+			result = false;
+		}
+		return result;
+		
+	}
 
 }

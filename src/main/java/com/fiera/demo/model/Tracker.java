@@ -5,11 +5,14 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Id;
 
+
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Tracker {
 
 	@Id
@@ -20,4 +23,8 @@ public class Tracker {
 	private Long redirectedQuantity;
 	private LocalDate createDate;
 	private LocalDateTime expirationDate;
+	
+	public Tracker(String target) {
+		this.target = target;
+	}
 }
